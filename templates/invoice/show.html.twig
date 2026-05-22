@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head><title>Invoice #{{ invoice.id }}</title></head>
+<body>
+    <h1>Invoice #{{ invoice.id }}</h1>
+    <p>Status: {{ invoice.status }}</p>
+    <p>Total: {{ total }} €</p>
+    <ul>
+    {% for item in items %}
+        <li>{{ item.label }} — {{ item.price }} €</li>
+    {% endfor %}
+    </ul>
+    <a href="{{ path('invoice_list') }}">← Back to list</a>
+</body>
+</html>
