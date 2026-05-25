@@ -1,29 +1,25 @@
 FROM php:8.3.30-apachebookworm
 
-# Install os and app dependencies
+# Install app dependencies
 RUN apt-get update && apt-get install -y \
     libicu-dev \
     zlib1g-dev \
-    libzip-dev \ 
-    libpng-dev \
-    libjpeg62-turbo-dev \
-    libpq-dev \
+    libzip-dev \
     && rm -rf /var/lib/apt/lists/*
 
-RUN (docker-php-ext-configure gd --with-jpeg-dir=/usr/include/ || docker-php-ext-configure gd --with-jpeg) \
-	&& docker-php-ext-install -j$(nproc) pdo_mysql pdo_pgsql pgsql opcache intl zip gd \
-    && mv ${PHP_INI_DIR}/php.ini-production ${PHP_INI_DIR}/php.ini \
-	&& a2enmod rewrite headers
+RUN docker-php-ext-install -j$(nproc) pdo_mysql opcache intl zip \
+    && mv ${PHP_INI_DIR}/php.ini-production ${PHP_INI_DIR}/php.ini
 
 # Set the working directory
-WORKDIR /var/www/html
+WORKDIR /var/www/
 
 # copy app files
 COPY config/ config/
 COPY migrations migrations
-COPY public/ public/
 COPY src/ src/
 COPY templates/ templates/
+COPY public/ public/
+RUN rm -rf html && ln -s public/ html
 
 # install & run composer
 ENV COMPOSER_ALLOW_SUPERUSER=1
