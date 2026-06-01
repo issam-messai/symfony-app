@@ -1,4 +1,4 @@
-FROM php:8.3.30-apachebookworm
+FROM php:8.4-fpm
 
 # Install app dependencies
 RUN apt-get update && apt-get install -y \
@@ -14,6 +14,7 @@ RUN docker-php-ext-install -j$(nproc) pdo_mysql opcache intl zip \
 WORKDIR /var/www/
 
 # copy app files
+COPY composer.json composer.lock ./
 COPY config/ config/
 COPY migrations migrations
 COPY src/ src/
