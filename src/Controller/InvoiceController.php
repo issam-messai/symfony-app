@@ -16,7 +16,13 @@ class InvoiceController extends AbstractController
     #[Route('/invoice/{id}', name: 'invoice_show', methods: ['GET'])]
     public function show(int $id): Response
     {
-        $invoice = $this->invoiceRepository->find($id);
+        $invoice = $this->invoiceRepository->find($id); 
+
+        if(!$invoice){
+            throw $this->createNotFoundException("l'id ". $id. " est absent en base");
+        }
+
+        
 
         return $this->render('invoice/show.html.twig', [
             'invoice' => $invoice,
