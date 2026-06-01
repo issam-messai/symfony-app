@@ -18,8 +18,6 @@ class OrderRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('o')
             ->where('o.customerId = :id')
             ->setParameter('id', $customerId)
-            ->andWhere('o.status = :status')
-            ->setParameter('status', 'active')
             ->orderBy('o.id', 'ASC')
             ->getQuery()
             ->getResult();
