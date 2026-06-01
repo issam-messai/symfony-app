@@ -1,0 +1,26 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8081:80"
+    container_name: symfony-app
+    restart: always
+    depends_on:
+      - mysql
+    environment:
+      DATABASE_URL: "mysql://appuser:apppass@mysql:3306/effios"
+
+  mysql:
+    image: mysql:8.0
+    container_name: symfony-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: effios
+      MYSQL_USER: appuser
+      MYSQL_PASSWORD: apppass
+
+volumes:
+  mysql_data:
