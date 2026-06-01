@@ -11,3 +11,7 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+
+    App\Service\ReportService:
+        arguments:
+            $em: '@doctrine.orm.entity_manager'

@@ -4,20 +4,24 @@ namespace App\Service;
 
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Tools\DsnParser;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Repository\OrderRepository;
+use App\Entity\Order;
+
 
 
 class ReportService
 {
+    public function __construct(private EntityManagerInterface $em)
+    {
+    }
+
+
     public function generate(int $userId): array
     {   
-        $dsnParser = new DsnParser(['mysql' => 'pdo_mysql']);
-        $params = $dsnParser->parse($_ENV['DATABASE_URL']);
-        $conn = DriverManager::getConnection($params);
+        $orderRepo = $this->em->getRepository(Order::class);
 
-        $result = $conn->executeQuery(
-            'SELECT * FROM `order` WHERE customer_id = ' . $userId
-        )->fetchAllAssociative();
-
-        return $result;
+        return $orderRepo->findByCustomer($userId);
     }
 }
