@@ -38,9 +38,13 @@ class OrderController extends AbstractController
     {
         $data = $this->reportService->generate($userId);
 
-        return $this->json([
+       return $this->json([
             'user_id' => $userId,
-            'rows'    => $data,
+            'rows'    => array_map(fn($o) => [
+                'id'        => $o->getId(),
+                'reference' => $o->getReference(),
+                'status'    => $o->getStatus(),
+            ], $data),
         ]);
     }
 }
